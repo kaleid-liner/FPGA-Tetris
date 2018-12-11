@@ -42,15 +42,15 @@ module LatticeDisplayer(
             cnt <= 0;
         end
         else cnt <= cnt + 1;
-        if (cnt != 0 & (&cnt[6:0] == 0)) begin
+        if (cnt != 0 && (|cnt[6:0] == 0)) begin
             column <= column + 1;
         end
-        if (cnt == 2048) G <= 0;
+        if (cnt == 2048) G <= 1;
         if (cnt == 4999) begin
             row <= row + 1; column <= 0;
         end
         for (i = 0; i < 16; i = i + 1) begin
-        if (cnt == 2 + i * 128) begin G <= 1; DI <= display_buffer[column]; end
+        if (cnt == 2 + i * 128) begin G <= 0; DI <= ~display_buffer[column]; end
         if (cnt == 42 + i * 128) CLK <= 1;
         if (cnt == 84 + i * 128) CLK <= 0; 
         end
