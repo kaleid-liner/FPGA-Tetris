@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
+`include "Constants.vh"
 
 module GameDisplayer(
     input clk_5mhz,
@@ -31,7 +31,6 @@ module GameDisplayer(
     wire [255:0] lattice;
     wire [255:0] current_block_lattice_mask;
     
-    parameter PLAYING = 0, STOPPING = 1, CLEARING = 2, NOTHING = 3, DROPPING = 4, DEAD = 5;
     parameter [255:0] GG =      {{16{1'b0}},
                                 {16{1'b0}},
                                 {2{8'b00111000}},
@@ -58,7 +57,7 @@ module GameDisplayer(
          end
     endgenerate
     
-    assign lattice = (state == DEAD) ? GG
+    assign lattice = (state == `DEAD) ? GG 
                         : (fallen_blocks | current_block_lattice_mask);
     
     LatticeDisplayer latticeDisplayer (lattice, clk_5mhz, A, B, C, D, G, DI, CLK, LAT);

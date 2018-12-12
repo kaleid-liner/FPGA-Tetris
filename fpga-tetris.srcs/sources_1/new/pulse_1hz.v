@@ -32,7 +32,7 @@ module pulse_1hz(
     end
     always @ (posedge clk)
     begin
-        if (cnt>=23'd4999999)
+        if (cnt>=23'd2499999)
         begin
             Q <= 1;
             cnt <= 23'd0;

@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
+`include "Constants.vh"
 
 module Tetris(
     input clk, 
@@ -46,7 +46,6 @@ module Tetris(
     wire clk_1hz;
     
     // not from 0 - 6, as my rng can only generate rn from 1 - 7
-    parameter I = 1, O = 2, T = 3, S = 4, Z = 5, J = 6, L = 7; 
     
     // use state machine to avoid multiple assignment 
     parameter PLAYING = 0, STOPPING = 1, CLEARING = 2, NOTHING = 3, DROPPING = 4, DEAD = 5;
@@ -134,7 +133,7 @@ module Tetris(
     cur_shape <= random_number;
     cur_rotate <= 0;
     // center the tetromino
-    if (random_number == I) 
+    if (random_number == `I) 
         cur_tlx = 6;
     else cur_tlx = 7;
     cur_tly <= 0;
@@ -172,7 +171,7 @@ module Tetris(
     initial begin
     cur_state = PLAYING;
     fallen_blocks = 0;
-    cur_shape = I;
+    cur_shape = `I;
     cur_tlx = 6;
     cur_tly = 0;
     cur_rotate = 0;
