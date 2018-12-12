@@ -1,6 +1,6 @@
-webtalk_init -webtalk_dir D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/lattice_test_tb_behav/webtalk/
+webtalk_init -webtalk_dir D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/tetris_tb_behav/webtalk/
 webtalk_register_client -client project
-webtalk_add_data -client project -key date_generated -value "Mon Dec 10 23:37:55 2018" -context "software_version_and_target_device"
+webtalk_add_data -client project -key date_generated -value "Wed Dec 12 22:38:11 2018" -context "software_version_and_target_device"
 webtalk_add_data -client project -key product_version -value "XSIM v2018.2 (64-bit)" -context "software_version_and_target_device"
 webtalk_add_data -client project -key build_version -value "2258646" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_platform -value "WIN64" -context "software_version_and_target_device"
@@ -14,7 +14,7 @@ webtalk_add_data -client project -key target_package -value "not_applicable" -co
 webtalk_add_data -client project -key target_speed -value "not_applicable" -context "software_version_and_target_device"
 webtalk_add_data -client project -key random_id -value "130df460e7be503cab69950bf40098fb" -context "software_version_and_target_device"
 webtalk_add_data -client project -key project_id -value "4817a739840b4d04aebd0a9cad8a6f14" -context "software_version_and_target_device"
-webtalk_add_data -client project -key project_iteration -value "22" -context "software_version_and_target_device"
+webtalk_add_data -client project -key project_iteration -value "34" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_name -value "Microsoft Windows 8 or later , 64-bit" -context "user_environment"
 webtalk_add_data -client project -key os_release -value "major release  (build 9200)" -context "user_environment"
 webtalk_add_data -client project -key cpu_name -value "Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz" -context "user_environment"
@@ -24,9 +24,9 @@ webtalk_add_data -client project -key system_ram -value "8.000 GB" -context "use
 webtalk_register_client -client xsim
 webtalk_add_data -client xsim -key Command -value "xsim" -context "xsim\\command_line_options"
 webtalk_add_data -client xsim -key trace_waveform -value "true" -context "xsim\\usage"
-webtalk_add_data -client xsim -key runtime -value "22 us" -context "xsim\\usage"
-webtalk_add_data -client xsim -key iteration -value "1" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Simulation_Time -value "0.06_sec" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Simulation_Memory -value "13196_KB" -context "xsim\\usage"
-webtalk_transmit -clientid 4159503351 -regid "" -xml D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/lattice_test_tb_behav/webtalk/usage_statistics_ext_xsim.xml -html D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/lattice_test_tb_behav/webtalk/usage_statistics_ext_xsim.html -wdm D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/lattice_test_tb_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
+webtalk_add_data -client xsim -key runtime -value "90 us" -context "xsim\\usage"
+webtalk_add_data -client xsim -key iteration -value "2" -context "xsim\\usage"
+webtalk_add_data -client xsim -key Simulation_Time -value "3.83_sec" -context "xsim\\usage"
+webtalk_add_data -client xsim -key Simulation_Memory -value "12956_KB" -context "xsim\\usage"
+webtalk_transmit -clientid 4013066114 -regid "" -xml D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/tetris_tb_behav/webtalk/usage_statistics_ext_xsim.xml -html D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/tetris_tb_behav/webtalk/usage_statistics_ext_xsim.html -wdm D:/code/Xilinx/fpga-tetris/fpga-tetris.sim/sim_1/behav/xsim/xsim.dir/tetris_tb_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
 webtalk_terminate

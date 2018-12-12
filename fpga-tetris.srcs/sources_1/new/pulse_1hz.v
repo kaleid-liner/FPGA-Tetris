@@ -24,20 +24,22 @@ module pulse_1hz(
     input clk,
     output reg Q
     );
-    reg [21:0]cnt;
+    reg [22:0] cnt;
     initial 
     begin
-        Q<=0;
-        cnt=22'd0; 
+        Q = 0;
+        cnt = 23'd0; 
     end
     always @ (posedge clk)
     begin
-        if (cnt>=22'd2499999)
+        if (cnt>=23'd4999999)
         begin
             Q <= 1;
-            cnt <= 22'd0;
+            cnt <= 23'd0;
         end
-        else 
-            cnt <= cnt + 22'd1;
+        else begin
+            cnt <= cnt + 23'd1;
+            Q <= 0;
+        end
     end
 endmodule

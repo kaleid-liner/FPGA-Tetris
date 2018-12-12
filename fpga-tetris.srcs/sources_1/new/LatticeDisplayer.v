@@ -33,7 +33,7 @@ module LatticeDisplayer(
     wire [7:0] row_start;
     integer i;
     
-    assign row_start = row << 4;
+    assign row_start = (row << 4) + 16;
     assign display_buffer = lattice[row_start+:16];
     
     initial begin row = 0; column = 0; cnt = 0; LAT = 0; end

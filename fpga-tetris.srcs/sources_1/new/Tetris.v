@@ -26,6 +26,7 @@ module Tetris(
     input rotate,
     input left,
     input right,
+    input drop,
     output A, B, C, D, G, DI, CLK, LAT
     );
     reg [255:0] fallen_blocks;
@@ -39,8 +40,8 @@ module Tetris(
     parameter I = 1, O = 2, T = 3, S = 4, Z = 5, J = 6, L = 7; 
     
     // use state machine to avoid multiple assignment 
-    parameter PLAYING = 0, STOPPING = 1, CLEARING = 2, NOTHING = 3;
-    reg [1:0] cur_state;
+    parameter PLAYING = 0, STOPPING = 1, CLEARING = 2, NOTHING = 3, DROPPING = 4;
+    reg [2:0] cur_state;
     
     reg [2:0] cur_shape;
     // top left coordinates of the falling tetromino, 
@@ -64,16 +65,28 @@ module Tetris(
                 next_xy3, next_xy4;
     
     // internal signal of state machine
-    wire down;
-    pulse_1hz pulse (clk_5mhz, down);
+    wire down_signal;
+    pulse_1hz pulse (clk_5mhz, down_signal);
+    
+    wire right_signal;
+    ButtonDownEvent btnr_down (clk_5mhz, right, right_signal);
+    
+    wire left_signal;
+    ButtonDownEvent btnl_down (clk_5mhz, left, left_signal);
+    
+    wire rotate_signal;
+    ButtonDownEvent btnu_down (clk_5mhz, rotate, rotate_signal);
+    
+    wire drop_signal;
+    ButtonDownEvent btnd_down (clk_5mhz, drop, drop_signal);
     
     reg [3:0] row;
     
     wire [7:0] row_start;
     assign row_start = row << 4;
     
-    wire clear;
-    assign clear = &fallen_blocks[row_start+:16];
+    wire clear_signal;
+    assign clear_signal = &fallen_blocks[row_start+:16];
     reg [3:0] row_to_clear;
     
     wire [7:0] row_to_clear_start;
@@ -95,13 +108,13 @@ module Tetris(
     wire game_over;
     assign game_over = (cur_tly == 0) && collide_with_fallen_blocks;
     
-    wire random_number;
+    wire [2:0] random_number;
     RandomNumberGenerator rng (clk_5mhz, random_number);
     
     task AddCurTetrominoToFallen;
     begin
     fallen_blocks[cur_xy1] <= 1;
-    fallen_blocks[cur_xy2 ] <= 1;
+    fallen_blocks[cur_xy2] <= 1;
     fallen_blocks[cur_xy3] <= 1;
     fallen_blocks[cur_xy4] <= 1;
     end
@@ -110,25 +123,40 @@ module Tetris(
     task GenerateNewTetromino;
     begin
     cur_shape <= random_number;
+    cur_rotate <= 0;
     // center the tetromino
-    if (cur_shape == I) 
-        cur_tlx <= 6;
-    else cur_tlx <= 7;
+    if (random_number == I) 
+        cur_tlx = 6;
+    else cur_tlx = 7;
     cur_tly <= 0;
     end
     endtask
     
+    task ResetGame;
+    begin
+    fallen_blocks <= 0;
+    GenerateNewTetromino();
+    end
+    endtask
+    
     initial begin
+    cur_state = PLAYING;
+    fallen_blocks = 0;
+    cur_shape = I;
+    cur_tlx = 6;
+    cur_tly = 0;
+    cur_rotate = 0;
     end
     
-    clk_wiz_0 display_clock (.clk_out1(clk_5mhz), .reset(reset), .clk_in1(clk));
+    clk_wiz_0 display_clock (.clk_out1(clk_5mhz), .reset(0), .clk_in1(clk));
     clock_1khz update_clock (clk_5mhz, clk_1khz);
-    clock_10hz input_clock(clk_5mhz, clk_10hz);
+    clock_10hz input_clock (clk_5mhz, clk_10hz);
     
-    GameDisplayer gameDisplayer (clk_5mhz, fallen_blocks, cur_xy1, cur_xy2, cur_xy3, cur_xy4, 
+    GameDisplayer gameDisplayer (clk_5mhz, fallen_blocks, 
+                                 cur_xy1, cur_xy2, cur_xy3, cur_xy4, 
                                  A, B, C, D, G, DI, CLK, LAT);
-    CalcNextBlocks calcNextBlocks (cur_tlx, cur_tly, cur_rotate, 
-                                    left, right, down, 
+    CalcNextBlocks calcNextBlocks (cur_state, cur_tlx, cur_tly, cur_rotate, 
+                                    left_signal, right_signal, down_signal, rotate_signal,
                                      next_tlx, next_tly, next_rotate);
     CalcCurBlocks calcCurXy (cur_tlx, cur_tly, cur_shape, cur_rotate, 
                                  cur_xy1, cur_xy2, cur_xy3, cur_xy4,
@@ -137,34 +165,40 @@ module Tetris(
                                   next_xy1, next_xy2, next_xy3, next_xy4,
                                   next_brx, next_bry);
     
-    always @(posedge down or posedge clk_5mhz) begin
+    always @(posedge clk_5mhz) begin
         if (cur_state == PLAYING) begin
-            if (left) begin
+            if (left_signal) begin
                 if (collide_with_left_wall || collide_with_fallen_blocks) begin
                 end
                 else cur_tlx <= cur_tlx - 1;
             end
-            else if (right) begin
+            else if (right_signal) begin
                 if (collide_with_right_wall || collide_with_fallen_blocks) begin
                 end
                 else cur_tlx <= cur_tlx + 1;
             end
-            else if (rotate) begin
+            else if (rotate_signal) begin
                 if (collide_with_right_wall || collide_with_bottom_wall || 
                     collide_with_fallen_blocks) begin
                 end
                 else cur_rotate <= cur_rotate + 1;
+            end
+            else if (drop_signal) begin
+                cur_state <= DROPPING;
             end              
-            else if (down) begin
+            else if (down_signal) begin
                 if (collide_with_bottom_wall || collide_with_fallen_blocks) begin
-                    GenerateNewTetromino();
                     AddCurTetrominoToFallen();
+                    GenerateNewTetromino();
                 end
                 else cur_tly <= cur_tly + 1;
             end
-            else if (clear) begin
+            else if (clear_signal) begin
                 row_to_clear <= row;
                 cur_state <= CLEARING;
+            end
+            else if (reset) begin
+                ResetGame();
             end
         end
         else if (cur_state == CLEARING) begin
@@ -177,10 +211,18 @@ module Tetris(
                 row_to_clear <= row_to_clear - 1;
             end
         end
+        else if (cur_state == DROPPING) begin
+            if (collide_with_bottom_wall || collide_with_fallen_blocks) begin
+                AddCurTetrominoToFallen();
+                GenerateNewTetromino();
+                cur_state <= PLAYING;
+            end
+            else cur_tly <= cur_tly + 1;
+        end
     end
     
     //scan row to judge if filled
-    always @(posedge clk_1khz) begin
+    always @(posedge clk_5mhz) begin
         row <= row + 1;
     end
 endmodule

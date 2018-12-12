@@ -26,6 +26,7 @@ module RandomNumberGenerator(
     );
     // LFSR
     // Generate a random number between 1 and 7
+    initial rn = 1;
     always @ (posedge clk) begin 
         rn <= { rn[1:0], rn[2] ^ rn[1] };
     end

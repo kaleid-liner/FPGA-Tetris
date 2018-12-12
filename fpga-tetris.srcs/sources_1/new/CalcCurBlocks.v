@@ -37,12 +37,12 @@ module CalcCurBlocks(
     );
     parameter I = 1, O = 2, T = 3, S = 4, Z = 5, J = 6, L = 7;
     
-    wire topleft_block;
-    assign topleft_block = tly << 4 + 15 - tlx;
+    wire [7:0] topleft_block;
+    assign topleft_block = (tly << 4) + 15 - tlx;
     
     always @(*) begin
         if (shape == I) begin
-            if ((rotate == 0) || (rotate == 2)) begin
+            if ((rotate == 1) || (rotate == 3)) begin
                 xy1 = topleft_block;
                 xy2 = topleft_block + 16;
                 xy3 = topleft_block + 32;
