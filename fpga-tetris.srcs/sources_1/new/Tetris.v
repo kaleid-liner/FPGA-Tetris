@@ -158,11 +158,19 @@ module Tetris(
             if (hundreds_score == 9) begin
                 if (thousands_score == 9) begin 
                 end
-                else thousands_score <= thousands_score + 1;
+                else begin thousands_score <= thousands_score + 1;
+                hundreds_score <= 0;
+                tens_score <= 0;
+                ones_score <= 0;
+                end
             end
-            else hundreds_score <= hundreds_score + 1;
+            else begin hundreds_score <= hundreds_score + 1;
+            tens_score <= 0;
+            ones_score <= 0;
+            end
         end
         else tens_score <= tens_score + 1;
+        ones_score <= 0;
     end
     else ones_score <= ones_score + 1;
     end
